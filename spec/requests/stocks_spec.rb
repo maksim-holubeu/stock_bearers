@@ -35,8 +35,9 @@ RSpec.describe "/stocks", type: :request do
   }
 
   describe "GET /index" do
+    let(:stock) { create(:stock, **valid_attributes) }
+
     it "renders a successful response" do
-      Stock.create! valid_attributes
       get stocks_url, headers: valid_headers, as: :json
       expect(response).to be_successful
     end
@@ -78,12 +79,13 @@ RSpec.describe "/stocks", type: :request do
 
   describe "PATCH /update" do
     context "with valid parameters" do
+      let(:stock) { create(:stock, **valid_attributes) }
+
       let(:new_attributes) {
         { "name" => "new_name" }
       }
 
       it "updates the requested stock" do
-        stock = Stock.create! valid_attributes
         patch stock_url(stock),
               params: { stock: new_attributes }, headers: valid_headers, as: :json
         stock.reload
@@ -91,7 +93,6 @@ RSpec.describe "/stocks", type: :request do
       end
 
       it "renders a JSON response with the stock" do
-        stock = Stock.create! valid_attributes
         patch stock_url(stock),
               params: { stock: new_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:ok)
@@ -100,8 +101,9 @@ RSpec.describe "/stocks", type: :request do
     end
 
     context "with invalid parameters" do
+      let(:stock) { create(:stock, **valid_attributes) }
+
       it "renders a JSON response with errors for the stock" do
-        stock = Stock.create! valid_attributes
         patch stock_url(stock),
               params: { stock: invalid_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:unprocessable_entity)
@@ -111,15 +113,16 @@ RSpec.describe "/stocks", type: :request do
   end
 
   describe "DELETE /destroy" do
+    let(:stock) { create(:stock, **valid_attributes) }
+
     it "destroys the requested stock" do
-      stock = Stock.create! valid_attributes
+      stock
       expect {
         delete stock_url(stock), headers: valid_headers, as: :json
       }.to change(Stock, :count).by(-1)
     end
 
     it "soft deletes the requested stock" do
-      stock = Stock.create! valid_attributes
       delete stock_url(stock), headers: valid_headers, as: :json
       stock.reload
       expect(stock.deleted_at).to be_a(Time)
