@@ -42,14 +42,6 @@ RSpec.describe "/stocks", type: :request do
     end
   end
 
-  describe "GET /show" do
-    it "renders a successful response" do
-      stock = Stock.create! valid_attributes
-      get stock_url(stock), as: :json
-      expect(response).to be_successful
-    end
-  end
-
   describe "POST /create" do
     context "with valid parameters" do
       it "creates a new Stock" do
