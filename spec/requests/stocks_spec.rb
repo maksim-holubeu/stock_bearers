@@ -125,5 +125,12 @@ RSpec.describe "/stocks", type: :request do
         delete stock_url(stock), headers: valid_headers, as: :json
       }.to change(Stock, :count).by(-1)
     end
+
+    it "soft deletes the requested stock" do
+      stock = Stock.create! valid_attributes
+      delete stock_url(stock), headers: valid_headers, as: :json
+      stock.reload
+      expect(stock.deleted_at).to be_a(Time)
+    end
   end
 end
