@@ -35,11 +35,30 @@ RSpec.describe "/stocks", type: :request do
   }
 
   describe "GET /index" do
-    let(:stock) { create(:stock, **valid_attributes) }
+    let!(:stock) { create(:stock, **valid_attributes) }
+    let(:expected_response_body) do
+      [
+        {
+          id: stock.id,
+          name: stock.name,
+          bearer_id: stock.bearer_id,
+          created_at: stock.created_at,
+          updated_at: stock.updated_at,
+          deleted_at: stock.deleted_at,
+          bearer: {
+            id: stock.bearer.id,
+            name: stock.bearer.name,
+            created_at: stock.bearer.created_at,
+            updated_at: stock.bearer.updated_at,
+          }
+        }
+      ]
+    end
 
     it "renders a successful response" do
       get stocks_url, headers: valid_headers, as: :json
       expect(response).to be_successful
+      expect(response.body).to eq(expected_response_body.to_json)
     end
   end
 

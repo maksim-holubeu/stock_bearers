@@ -3,7 +3,7 @@ class StocksController < ApplicationController
 
   # GET /stocks
   def index
-    @stocks = Stock.all
+    @stocks = Stock.all.as_json(include: :bearer)
 
     render json: @stocks
   end
