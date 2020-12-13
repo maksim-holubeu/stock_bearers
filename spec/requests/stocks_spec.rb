@@ -16,12 +16,14 @@ RSpec.describe "/stocks", type: :request do
   # This should return the minimal set of attributes required to create a valid
   # Stock. As you add validations to Stock, be sure to
   # adjust the attributes here as well.
+  let(:bearer) { create(:bearer) }
+
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    { name: SecureRandom.uuid, bearer_id: bearer.id }
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    { name: nil, bearer_id: bearer.id }
   }
 
   # This should return the minimal set of values that should be in the headers
@@ -77,7 +79,7 @@ RSpec.describe "/stocks", type: :request do
         post stocks_url,
              params: { stock: invalid_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
       end
     end
   end
@@ -85,23 +87,23 @@ RSpec.describe "/stocks", type: :request do
   describe "PATCH /update" do
     context "with valid parameters" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        { "name" => "new_name" }
       }
 
       it "updates the requested stock" do
         stock = Stock.create! valid_attributes
         patch stock_url(stock),
-              params: { stock: invalid_attributes }, headers: valid_headers, as: :json
+              params: { stock: new_attributes }, headers: valid_headers, as: :json
         stock.reload
-        skip("Add assertions for updated state")
+        expect(stock.attributes).to include(new_attributes)
       end
 
       it "renders a JSON response with the stock" do
         stock = Stock.create! valid_attributes
         patch stock_url(stock),
-              params: { stock: invalid_attributes }, headers: valid_headers, as: :json
+              params: { stock: new_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:ok)
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
       end
     end
 
@@ -111,7 +113,7 @@ RSpec.describe "/stocks", type: :request do
         patch stock_url(stock),
               params: { stock: invalid_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
       end
     end
   end
