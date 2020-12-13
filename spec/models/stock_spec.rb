@@ -1,5 +1,6 @@
 require 'rails_helper'
+require 'models/shared/name_uniqueness_spec'
 
 RSpec.describe Stock, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  include_examples "name uniqueness preserved", SecureRandom.uuid
 end

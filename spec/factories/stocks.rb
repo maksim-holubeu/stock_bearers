@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :stock do
     name { "MyString" }
-    bearer { nil }
+    bearer { create(:bearer) }
   end
 end
